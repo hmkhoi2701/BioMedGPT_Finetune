@@ -7,7 +7,6 @@ This source code is licensed under the Apache 2.0 license found in the LICENSE f
 
 # [Nature Medicine'24] BiomedGPT
 *A Generalist Vision-Language Foundation Model for Diverse Biomedical Tasks.* (https://arxiv.org/abs/2305.17100)
-)
 
 **BiomedGPT** is pre-trained and fine-tuned with multi-modal & multi-task biomedical datasets. This repository guides you to finetune BiomedGPT for VQA tasks on MIMIC-CXR and VinDR-CXR datasets. 
 
