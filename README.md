@@ -5,23 +5,17 @@ All rights reserved.
 This source code is licensed under the Apache 2.0 license found in the LICENSE file in the root directory.
 -->
 
-# [Nature Medicine'24] <img src="examples/logo.jpg" alt="logo" width="35">iomedGPT
-*A Generalist Vision-Language Foundation Model for Diverse Biomedical Tasks.* [![Arxiv](https://img.shields.io/badge/arXiv-2305.17100-B21A1B)](https://arxiv.org/abs/2305.17100
+# [Nature Medicine'24] BiomedGPT
+*A Generalist Vision-Language Foundation Model for Diverse Biomedical Tasks.* (https://arxiv.org/abs/2305.17100)
 )
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/biomedgpt-a-unified-and-generalist-biomedical/medical-visual-question-answering-on-vqa)](https://paperswithcode.com/sota/medical-visual-question-answering-on-vqa?p=biomedgpt-a-unified-and-generalist-biomedical)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/biomedgpt-a-unified-and-generalist-biomedical/medical-visual-question-answering-on-pathvqa)](https://paperswithcode.com/sota/medical-visual-question-answering-on-pathvqa?p=biomedgpt-a-unified-and-generalist-biomedical)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/biomedgpt-a-unified-and-generalist-biomedical/image-captioning-on-iu-x-ray)](https://paperswithcode.com/sota/image-captioning-on-iu-x-ray?p=biomedgpt-a-unified-and-generalist-biomedical)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/biomedgpt-a-unified-and-generalist-biomedical/text-summarization-on-meqsum)](https://paperswithcode.com/sota/text-summarization-on-meqsum?p=biomedgpt-a-unified-and-generalist-biomedical)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/biomedgpt-a-unified-and-generalist-biomedical/natural-language-inference-on-mednli)](https://paperswithcode.com/sota/natural-language-inference-on-mednli?p=biomedgpt-a-unified-and-generalist-biomedical)
-
-**BiomedGPT** is pre-trained and fine-tuned with multi-modal & multi-task biomedical datasets. Details of used datasets are shown in [datasets.md](datasets.md). If you have any questions, feel free to contact us or post issues. 
+**BiomedGPT** is pre-trained and fine-tuned with multi-modal & multi-task biomedical datasets. This repository guides you to finetune BiomedGPT for VQA tasks on MIMIC-CXR and VinDR-CXR datasets. 
 
 ## Installation (Linux)
 
 1. Clone this repository and navigate to the BiomedGPT folder
 ```bash
-git clone https://github.com/taokz/BiomedGPT
+git clone https://github.com/hmkhoi2701/BioMedGPT_Finetune
 cd BiomedGPT/
 ```
 
@@ -39,16 +33,10 @@ Please check out this [Colab notebook](https://colab.research.google.com/drive/1
 **Warning:** Extensive experiments using transformers have not been conducted, so we cannot confirm whether the results from transformers and fairseq are fully aligned.
 
 ## Checkpoints
-We provid pretrained checkpoints of BiomedGPT (<a href="https://www.dropbox.com/sh/cu2r5zkj2r0e6zu/AADZ-KHn-emsICawm9CM4MqVa?dl=0">Dropbox</a>), which can be put in the `scripts/` folder for further development. For finetuned checkpoints, please refer to [checkpoints.md](checkpoints.md). 
-
-transformers-compatible weights are accessible through the [collection ](https://huggingface.co/collections/PanaceaAI/biomedgpt-v1-66ca7c51e378662e15178be3).
-
-### Note:
-We emphasize that BiomedGPT, including its files, code, and checkpoints, is strictly for academic research purposes. Commercial and clinical uses are strictly prohibited for three key reasons: First, BiomedGPT is based on the OFA framework, which carries a non-commercial license that we have inherited. Second, our model is not licensed for use in healthcare settings. Finally, we have not implemented sufficient security measures, and the current model cannot guarantee the accuracy required for medical diagnoses.
-
+The authors provided pretrained checkpoints of BiomedGPT (<a href="https://www.dropbox.com/sh/cu2r5zkj2r0e6zu/AADZ-KHn-emsICawm9CM4MqVa?dl=0">Dropbox</a>), which can be put in the `scripts/` folder for finetuning. Here, please download the ```biomedgpt_base.pt``` file.
 
 ## Implementation
-We provide the preprocessing, pretraining, finetuning and inference scripts in the `scripts/` folder. You can follow the directory setting below:
+The preprocessing, pretraining, finetuning and inference scripts are stored in the `scripts/` folder. You can follow the directory setting below:
 
 ```
 BiomedGPT/
@@ -82,61 +70,18 @@ Add ```--zero-shot``` argument in the script. Example script: ```/scripts/vqa/ev
 **Warning:** The current implementation is not yet designed for chatbot or copilot applications, as its primary focus is on learning general representations in medicine that can be transferred to downstream tasks, as outlined in our paper. Large-scale training and instruction tuning for improving robust conversational abilities are still in progress.
 
 ## Downstreams
-We provide the run scripts of fine-tuning and inference. There will be log files during execution. Before fine-tuning or inference, please refer to 
-<details>
-    <summary><b>Visual Question Answering</b></summary>
-<pre>
+I customized the code to facilitate the VQA task on MIMIC-CXR and VinDR-CXR datasets. Here are the steps
+
+1, Run ```scripts/vqa/generate_tsv.ipynb``` and modify the paths to the image folders. As a result there will be files named ```train.tsv``` and ```test.tsv``` at ```datasets/finetuning```.
+
+2, Run 
+```bash
 cd scripts/vqa
 # for fine-tuning
-bash train_vqa_rad_beam.sh
-# for inference using fine-tuned weights
-bash evaluate_vqa_rad_beam.sh
-# for zero-shot inference using instruction-tuned weights
-bash evaluate_vqa_rad_unconstrained.sh
-</pre>
-</details>
-<details>
-    <summary><b>Image Captioning</b></summary>
-<pre>
-cd scripts/caption
-# for fine-tuning
-bash train_peir_gross.sh
-# for inference
-bash evaluate_peir_gross.sh
-</pre>
-</details>
-<details>
-    <summary><b>Text Summarization</b></summary>
-<pre>
-cd scripts/text_sum
-# for fine-tuning
-bash train_meqsum.sh
-# for inference
-bash evaluate_meqsum.sh
-</pre>
-</details>
-<details>
-    <summary><b>Natural Language Inference</b></summary>
-<pre>
-cd scripts/mednli
-# for fine-tuning
-bash train_mednli.sh
-# for inference
-bash evaluate_mednli.sh
-</pre>
-</details>
-<details>
-    <summary><b>Image Classification</b></summary>
-<pre>
-cd scripts/image_cls
-# for fine-tuning: I provide a template, please set different hyparameters for each dataset in MedMNIST if required.
-bash train_medmnist.sh 
-# for inference: a template
-bash evaluate_medmnist.sh
-</pre>
-</details>
+bash train_vqa_custom.sh
+```
 
-<br></br>
+3, The finetuned weights will be stored at ```checkpoints```, while the logs will be at ```scripts/vqa/vqa_rad_logs```
 
 # Related Codebase
 * [OFA](https://github.com/OFA-Sys/OFA)

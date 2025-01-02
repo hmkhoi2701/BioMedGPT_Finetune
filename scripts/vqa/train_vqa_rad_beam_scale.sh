@@ -1,11 +1,11 @@
 #!/usr/bin/env
 
 # Number of GPUs per GPU worker
-GPUS_PER_NODE=4
+GPUS_PER_NODE=1
 # Number of GPU workers, for single-worker training, please set to 1
 WORKER_CNT=1
 # The ip address of the rank-0 worker, for single-worker training, please set to localhost
-export MASTER_ADDR=127.0.0.1
+export MASTER_ADDR=localhost
 # The port for communication
 export MASTER_PORT=8314
 # The rank of this worker, should be in {0, ..., WORKER_CNT-1}, for single-worker training, please set to 0
@@ -15,7 +15,7 @@ data_dir=../../datasets/finetuning/vqa-rad
 data=${data_dir}/train.tsv,${data_dir}/val.tsv
 ans2label_file=${data_dir}/trainval_ans2label.pkl
 
-declare -a Scale=('tiny' 'medium' 'base')
+declare -a Scale=('base')
 
 for scale in ${Scale[@]}; do
     restore_file=../../checkpoints/biomedgpt_${scale}.pt
@@ -78,7 +78,7 @@ for scale in ${Scale[@]}; do
           save_path=${save_dir}/${max_epoch}"_"${warmup_ratio}"_"${lr}"_"${patch_image_size}_"${unconstrained_training_flag}"
           mkdir -p $save_path
 
-          CUDA_VISIBLE_DEVICES=0,1,2,4 python3 -m torch.distributed.launch --nproc_per_node=${GPUS_PER_NODE} --nnodes=${WORKER_CNT} --node_rank=${RANK} --master_addr=${MASTER_ADDR} --master_port=${MASTER_PORT} ../../train.py \
+          CUDA_VISIBLE_DEVICES=0 python3 -m torch.distributed.launch --nproc_per_node=${GPUS_PER_NODE} --nnodes=${WORKER_CNT} --node_rank=${RANK} --master_addr=${MASTER_ADDR} --master_port=${MASTER_PORT} ../../train.py \
               ${data} \
               --selected-cols=${selected_cols} \
               --bpe-dir=${bpe_dir} \

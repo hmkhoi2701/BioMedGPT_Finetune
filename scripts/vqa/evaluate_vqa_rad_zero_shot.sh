@@ -14,7 +14,7 @@ data_dir=../../datasets/finetuning/vqa-rad
 data=${data_dir}/test.tsv
 ans2label_file=${data_dir}/trainval_ans2label.pkl
 
-declare -a Scale=('tiny' 'medium' 'base')
+declare -a Scale=('base')
 
 for scale in ${Scale[@]}; do
     if [[ $scale =~ "tiny" ]]; then
@@ -33,7 +33,7 @@ for scale in ${Scale[@]}; do
     log_file=${result_path}/${scale}".log"
     # log_file=${result_path}/"val_"${scale}".log"
 
-    CUDA_VISIBLE_DEVICES=9 python3 -m torch.distributed.launch --nproc_per_node=1 --master_port=${MASTER_PORT} ../../evaluate.py \
+    CUDA_VISIBLE_DEVICES=0 python3 -m torch.distributed.launch --nproc_per_node=1 --master_port=${MASTER_PORT} ../../evaluate.py \
         ${data} \
         --path=${path} \
         --user-dir=${user_dir} \
