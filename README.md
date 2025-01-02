@@ -16,7 +16,7 @@ This source code is licensed under the Apache 2.0 license found in the LICENSE f
 1. Clone this repository and navigate to the BiomedGPT folder
 ```bash
 git clone https://github.com/hmkhoi2701/BioMedGPT_Finetune
-cd BiomedGPT/
+cd BioMedGPT_Finetune/
 ```
 
 2. Install required packages
@@ -39,7 +39,7 @@ The authors provided pretrained checkpoints of BiomedGPT (<a href="https://www.d
 The preprocessing, pretraining, finetuning and inference scripts are stored in the `scripts/` folder. You can follow the directory setting below:
 
 ```
-BiomedGPT/
+BioMedGPT_Finetune/
 ├── checkpoints/
 ├── datasets/
 │   ├── pretraining/
